@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Receita
+from receitas.models import Receita
 from django.contrib.auth.models import User
-
+from django.contrib import auth, messages
 
 def index(request):
     receitas = Receita.objects.order_by('-date_receita').filter(publicada = True)
@@ -15,16 +15,6 @@ def receita(request, receita_id):
 
     receita_a_exibir = { 'receita' : receita}
     return render(request,'receitas/receita.html', receita_a_exibir)
-
-def buscar(request):
-    if 'filtro' in request.GET:
-        receitas = Receita.objects.filter(publicada=True).order_by('-date_receita').filter(nome_receita__icontains=request.GET['filtro'])
-        dados = {
-            'receitas': receitas
-        }
-        return render(request, 'receitas/buscar.html', dados)
-    else:
-        return render(request, 'receitas/buscar.html')
 
 def atualiza_receita(request):
     if request.method =='POST':
